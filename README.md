@@ -1,2 +1,3 @@
-# memory
-memory game
+# Memory game
+
+First commit
