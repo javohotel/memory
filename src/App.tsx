@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import Sidebar from './components/SideBar';
 import { AnimalsResponse, Entry } from './def/animals.defs';
-import match from './utils/match';
 
 const API_URL: string =
   'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=20';
@@ -17,11 +16,57 @@ function App() {
   const [mistakes, setMistakes] = useState(0);
   const [total, setTotal] = useState(0);
   const [playesName, setPlayersName] = useState('Tulio Triviño?');
-  const [matchers, setMatchers] = useState<string[]>([]);
+  const [first, setFirst] = useState<Entry>();
+  const [second, setSecond] = useState<Entry>();
+  const [noOpen, setNoOpen] = useState(false);
 
-  const handleCount = (uuid: string) => {
-    setMatchers([...matchers, uuid]);
+  const handleCount = (card: Entry) => {
+    if (first !== undefined && first?.id !== card.id) {
+      setSecond(card);
+    } else {
+      setFirst(card);
+    }
   };
+
+  function removeSelection() {
+    setFirst(undefined);
+    setSecond(undefined);
+    setNoOpen(false);
+  }
+
+  useEffect(() => {
+    if (total != 0 && successes === total) {
+      withReactContent(Swal).fire({
+        title: 'You Win!',
+        text: 'The job is yours!',
+        icon: 'success',
+      });
+    }
+  }, [successes]);
+
+  useEffect(() => {
+    if (first && second) {
+      setNoOpen(true);
+      if (first.fields.image.uuid === second.fields.image.uuid) {
+        setSuccesses(prev => prev + 1);
+        setAnimals(prevArray => {
+          return prevArray.map(obj => {
+            if (obj.fields.image.uuid === first.fields.image.uuid) {
+              return { ...obj, matched: true };
+            } else {
+              return obj;
+            }
+          });
+        });
+        removeSelection();
+      } else {
+        setMistakes(prev => prev + 1);
+        setTimeout(() => {
+          removeSelection();
+        }, 1000);
+      }
+    }
+  }, [first, second]);
 
   async function request(url: string): Promise<AnimalsResponse> {
     const response = await fetch(url);
@@ -40,45 +85,6 @@ function App() {
       },
     });
   };
-
-  useEffect(() => {
-    if (matchers.length === 2) {
-      const [uno, dos] = matchers;
-      const isMatch = match(uno, dos);
-
-      if (isMatch) {
-        console.log('se logro');
-
-        setAnimals(prev => {
-          return prev.map(obj => {
-            if (
-              obj.fields.image.uuid === uno ||
-              obj.fields.image.uuid === dos
-            ) {
-              return { ...obj, matchOpen: true, isOpen: false };
-            }
-            return obj;
-          });
-        });
-        setSuccesses(prev => prev + 1);
-      } else {
-        console.log('no se logro');
-        setAnimals(prev => {
-          return prev.map(obj => {
-            if (
-              obj.fields.image.uuid === uno ||
-              obj.fields.image.uuid === dos
-            ) {
-              return { ...obj, isOpen: false, matchOpen: false };
-            }
-            return obj;
-          });
-        });
-        setMistakes(prev => prev + 1);
-      }
-      setMatchers([]);
-    }
-  }, [matchers]);
 
   useEffect(() => {
     // ESTO SE PODRIA HABER HECHO CON UN HOOK, PERO PARA NO ESCRIBIR TANTO LO DEJE SIMPLE
@@ -101,7 +107,10 @@ function App() {
         const copy = entries;
         const double = copy.concat(entries);
         const random = shuffle(double);
-        setAnimals(random);
+        const randomId = random.map((item, index) => {
+          return { ...item, id: item.fields.image.uuid + index };
+        });
+        setAnimals(randomId);
       });
     } catch (error) {
       console.error('Error fetching animals');
@@ -121,14 +130,17 @@ function App() {
         </div>
         <div className="col-sm-9">
           <div className="game">
-            {animals.map((animal, index) => (
+            {animals.map(animal => (
               <FlipCard
-                imageUrl={animal.fields.image.url}
-                uuid={animal.fields.image.uuid}
+                card={animal}
+                key={animal.id}
                 count={handleCount}
-                key={animal.meta.slug + index}
-                outsideOpen={animal.isOpen}
-                matchOpen={animal.matchOpen}
+                open={
+                  animal.id === first?.id ||
+                  animal.id === second?.id ||
+                  animal.matched === true
+                }
+                noOpen={noOpen}
               />
             ))}
           </div>

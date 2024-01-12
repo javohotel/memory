@@ -1,30 +1,24 @@
-import { useEffect, useState } from 'react';
 import './FlipCard.scss';
+import { Entry } from '../../def/animals.defs';
 
 type FlipProps = {
-  imageUrl: string;
-  uuid: string;
-  count: (uuid: string) => void;
-  outsideOpen?: boolean;
-  matchOpen?: boolean;
+  card: Entry;
+  count: (item: Entry) => any;
+  open: boolean;
+  noOpen?: boolean;
 };
 
 export default function FlipCard(props: FlipProps) {
-  const { imageUrl, uuid, count, outsideOpen, matchOpen } = props;
-  const [open, setOpen] = useState(outsideOpen);
-  const handleClick = () => {
-    setOpen(true);
-    count(uuid);
-  };
+  const { card, count, open, noOpen } = props;
 
   return (
-    <div className="flip-card" onClick={handleClick}>
+    <div className="flip-card" onClick={() => !noOpen && count(card)}>
       <div className={'flip-card-inner' + (open ? ' open' : '')}>
         <div className="flip-card-front">
-          <h1>?</h1> {imageUrl}
+          <h1>?</h1>
         </div>
         <div className="flip-card-back">
-          <img width="100%" src={imageUrl} alt="Avatar" />
+          <img width="100%" src={card.fields.image.url} alt="Avatar" />
         </div>
       </div>
     </div>

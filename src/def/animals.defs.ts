@@ -6,8 +6,8 @@ export interface AnimalsResponse {
 export interface Entry {
   meta: EntryMeta;
   fields: Fields;
-  isOpen?: boolean;
-  matchOpen?: boolean;
+  matched?: boolean;
+  id?: string;
 }
 
 export interface Fields {
