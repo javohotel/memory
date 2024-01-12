@@ -28,11 +28,11 @@ function App() {
     }
   };
 
-  function removeSelection() {
+  const reset = () => {
     setFirst(undefined);
     setSecond(undefined);
     setNoOpen(false);
-  }
+  };
 
   useEffect(() => {
     if (total != 0 && successes === total) {
@@ -40,6 +40,7 @@ function App() {
         title: 'You Win!',
         text: 'The job is yours!',
         icon: 'success',
+        showConfirmButton: false,
       });
     }
   }, [successes]);
@@ -58,11 +59,11 @@ function App() {
             }
           });
         });
-        removeSelection();
+        reset();
       } else {
         setMistakes(prev => prev + 1);
         setTimeout(() => {
-          removeSelection();
+          reset();
         }, 1000);
       }
     }
