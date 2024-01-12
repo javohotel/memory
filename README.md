@@ -18,7 +18,7 @@ npm run dev
 
 ## Live demo
 
-You can see a live demo on: [here](https://choosealicense.com/licenses/mit/)
+You can see a live demo on: [here](https://javohotel.github.io/memory/)
 
 ## License
 
