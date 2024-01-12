@@ -5,14 +5,14 @@ type FlipProps = {
   card: Entry;
   count: (item: Entry) => any;
   open: boolean;
-  noOpen?: boolean;
+  preventOpen?: boolean;
 };
 
 export default function FlipCard(props: FlipProps) {
-  const { card, count, open, noOpen } = props;
+  const { card, count, open, preventOpen } = props;
 
   return (
-    <div className="flip-card" onClick={() => !noOpen && count(card)}>
+    <div className="flip-card" onClick={() => !preventOpen && count(card)}>
       <div className={'flip-card-inner' + (open ? ' open' : '')}>
         <div className="flip-card-front">
           <h1>?</h1>

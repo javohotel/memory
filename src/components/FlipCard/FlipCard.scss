@@ -6,6 +6,10 @@
   perspective: 1000px;
   overflow: hidden;
   cursor: pointer;
+  @media screen and (max-width: 768px) {
+    width: 50%;
+    height: 100px;
+  }
 }
 
 .flip-card-inner {
