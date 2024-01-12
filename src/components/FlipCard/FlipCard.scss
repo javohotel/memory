@@ -6,6 +6,10 @@
   perspective: 1000px;
   overflow: hidden;
   cursor: pointer;
+  @media screen and (max-width: 1200px) {
+    width: 150px;
+    height: 100px;
+  }
   @media screen and (max-width: 768px) {
     width: 50%;
     height: 100px;

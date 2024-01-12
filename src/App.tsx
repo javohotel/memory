@@ -127,14 +127,14 @@ function App() {
     <div className="container-fluid">
       <h1 className="text-center">Memory Game</h1>
       <div className="row">
-        <div className="col-md-3">
+        <div className="col-md-12 col-xl-3">
           <Sidebar
             name={playersName}
             successes={successes}
             mistakes={mistakes}
           />
         </div>
-        <div className="col-sm-9">
+        <div className="col-md-12 col-xl-9">
           <div className="game">
             {animals.map(animal => (
               <FlipCard
