@@ -9,6 +9,7 @@ export default function Sidebar(props: Props) {
   return (
     <>
       <h3>Hi {name}</h3>
+      <p>Tap the cards and find the pairs! have fun for hours</p>
       <p>Your score is:</p>
       <div className="row">
       <p className="alert alert-success mx-1 col-xl-12 col-md-5">
