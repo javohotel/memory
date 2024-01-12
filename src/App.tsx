@@ -39,7 +39,7 @@ function App() {
     if (total != 0 && successes === total) {
       withReactContent(Swal).fire({
         title: 'You Win!',
-        text: 'The job is yours!',
+        text: 'You got the job!',
         icon: 'success',
         showConfirmButton: false,
       });
