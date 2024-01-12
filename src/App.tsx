@@ -16,7 +16,7 @@ function App() {
   const [successes, setSuccesses] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [total, setTotal] = useState(0);
-  const [playesName, setPlayersName] = useState('Tulio Triviño?');
+  const [playersName, setPlayersName] = useState('Tulio Triviño?');
   const [first, setFirst] = useState<Entry>();
   const [second, setSecond] = useState<Entry>();
   const [preventOpen, setPreventOpen] = useState(false);
@@ -78,11 +78,10 @@ function App() {
     withReactContent(Swal).fire({
       title: <i>Your beautiful name</i>,
       input: 'text',
-      playesName,
       preConfirm: () => {
-        const playerName = Swal.getInput()?.value || '';
-        setPlayersName(playerName);
-        localStorage.setItem('playerName', playerName);
+        const name = Swal.getInput()?.value || '';
+        setPlayersName(name);
+        localStorage.setItem('playersName', name);
       },
     });
   };
@@ -90,7 +89,7 @@ function App() {
   useEffect(() => {
     fetchData();
     // ESTO SE PODRIA HABER HECHO CON UN HOOK, PERO PARA NO ESCRIBIR TANTO LO DEJE SIMPLE
-    const localPlayerName = localStorage.getItem('playerName');
+    const localPlayerName = localStorage.getItem('playersName');
     if (localPlayerName) {
       setPlayersName(localPlayerName);
     } else {
@@ -116,13 +115,21 @@ function App() {
     }
   };
 
+  const validateOpen = (animal: Entry): boolean => {
+    return (
+      animal.id === first?.id ||
+      animal.id === second?.id ||
+      animal.matched === true
+    );
+  };
+
   return (
     <div className="container-fluid">
       <h1 className="text-center">Memory Game</h1>
       <div className="row">
         <div className="col-md-3">
           <Sidebar
-            name={playesName}
+            name={playersName}
             successes={successes}
             mistakes={mistakes}
           />
@@ -134,11 +141,7 @@ function App() {
                 card={animal}
                 key={animal.id}
                 count={handleCount}
-                open={
-                  animal.id === first?.id ||
-                  animal.id === second?.id ||
-                  animal.matched === true
-                }
+                open={validateOpen(animal)}
                 preventOpen={preventOpen}
               />
             ))}
