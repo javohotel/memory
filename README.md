@@ -18,7 +18,7 @@ npm run dev
 
 ## Live demo
 
-You can see a live demo on: [here](https://javohotel.github.io/memory/)
+You can see a live demo: [here](https://javohotel.github.io/memory/)
 
 ## License
 
